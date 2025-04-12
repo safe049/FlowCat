@@ -1,0 +1,15 @@
+{
+  "goals": [
+    {
+      "name": "\u8bfb\u6570\u5b66\u4ee3\u65701",
+      "difficulty": "Medium",
+      "levels": 5,
+      "pomodoros_per_level": 3,
+      "current_pomodoros": 0,
+      "progress": 0,
+      "start": "2025-04-12",
+      "end": "2025-05-05"
+    }
+  ],
+  "pomodoro_sessions": 1
+}

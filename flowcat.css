@@ -1,0 +1,205 @@
+/* ========= 全局基础 ========= */
+* {
+    color: #cdd6f4;
+    background: #1e1e2e;
+    border: none;
+}
+
+Screen {
+    layout: vertical;
+}
+
+/* ========= 布局结构 ========= */
+#main-row {
+    layout: horizontal;
+    height: 1fr;
+}
+
+#pomodoro {
+    width: 25%;
+    padding: 1;
+    border-right: solid #45475a;
+}
+
+#col-today,
+#col-all {
+    padding: 1;
+    width: 37%;
+    height: 100%;
+    border-left: solid #45475a;
+}
+
+/* ========= 标题类 ========= */
+.title,
+.screen-title {
+    color: #f9e2af;
+    text-align: center;
+    text-style: bold;
+    padding: 1;
+    width: 100%;
+}
+
+/* ========= 番茄钟区域 ========= */
+#timer {
+    color: #fab387;
+    text-style: bold;
+    text-align: center;
+    margin: 1 0;
+}
+
+#active-goal {
+    color: #89b4fa;
+    text-align: center;
+    margin: 1 0;
+}
+
+#pomodoro-status {
+    color: #a6e3a1;
+    text-align: center;
+    height: 3;
+    margin: 1 0;
+}
+
+#session-count {
+    color: #b4befe;
+    text-align: center;
+    margin: 1 0;
+}
+
+/* ========= 标签与按钮 ========= */
+Label {
+    padding: 1;
+}
+
+Button {
+    background: #313244;
+    border: solid #f5e0dc;
+    color: #cdd6f4;
+    margin: 1;
+    min-width: 12;
+}
+
+Button:hover {
+    background: #45475a;
+}
+
+Button.-success {
+    background: #a6e3a1;
+    color: #11111b;
+}
+Button.-success:hover {
+    background: #94e2d5;
+}
+
+Button.-error {
+    background: #f38ba8;
+    color: #11111b;
+}
+Button.-error:hover {
+    background: #f5c2e7;
+}
+
+Button.-primary {
+    background: #89b4fa;
+    color: #11111b;
+}
+Button.-primary:hover {
+    background: #74c7ec;
+}
+
+Button.-warning {
+    background: #f9e2af;
+    color: #11111b;
+}
+Button.-warning:hover {
+    background: #fab387;
+}
+
+/* ========= 按钮容器（自动换行） ========= */
+.wrap-buttons {
+    layout: horizontal;
+    padding: 1;
+    height: auto;
+    width: 100%;
+    align: center middle;
+}
+
+.wrap-buttons > Button {
+    min-width: 8;
+    margin: 0 1 1 1;
+}
+
+.screen-actions {
+    margin-top: 2;
+    height: auto;
+}
+
+/* ========= 目标项目与状态 ========= */
+.goal {
+    padding: 1;
+    margin: 1 0;
+    border-bottom: solid #585b70;
+}
+
+.goal-actions {
+    margin: 1 0;
+    height: auto;
+}
+
+.goal-actions > Button {
+    min-width: 10;
+}
+
+.goal-active {
+    border-left: solid #a6e3a1;
+    padding-left: 1;
+}
+
+/* ========= 进度条 ========= */
+ProgressBar {
+    height: 1;
+    width: 100%;
+    margin: 1 0;
+}
+
+ProgressBar > .progress--bar {
+    background: #a6e3a1;
+}
+
+ProgressBar > .progress--background {
+    background: #585b70;
+}
+
+/* ========= 通知消息 ========= */
+Notification {
+    background: #313244;
+    border: solid #45475a;
+    color: #cdd6f4;
+}
+
+Notification.-success {
+    background: #a6e3a1;
+    color: #11111b;
+}
+
+Notification.-error {
+    background: #f38ba8;
+    color: #11111b;
+}
+
+Notification.-warning {
+    background: #f9e2af;
+    color: #11111b;
+}
+
+/* ========= 屏幕容器与底部 ========= */
+Container {
+    height: auto;
+    padding: 1;
+    margin: 1 0;
+}
+
+Footer {
+    background: #181825;
+    dock: bottom;
+}
