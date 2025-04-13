@@ -9,7 +9,17 @@
       "progress": 0,
       "start": "2025-04-12",
       "end": "2025-05-05"
+    },
+    {
+      "name": "\u5b66\u4e60\u8ba1\u7b97\u673a",
+      "difficulty": "Medium",
+      "levels": 3,
+      "pomodoros_per_level": 2,
+      "current_pomodoros": 0,
+      "progress": 1,
+      "start": "2025-04-12",
+      "end": "2025-04-20"
     }
   ],
-  "pomodoro_sessions": 1
+  "pomodoro_sessions": 3
 }

@@ -3,13 +3,14 @@ import os
 import datetime
 from rich.text import Text
 from textual.app import App, ComposeResult
+from textual.events import Key 
 from textual.widgets import Header, Footer, Button, Static, Input, Label, ProgressBar, Select
 from textual.containers import Container, Horizontal, Vertical
 from textual.reactive import reactive
-from textual.screen import Screen
+from textual.screen import Screen, ModalScreen
 from textual import work
 from textual import on
-
+import random
 
 
 DATA_FILE = "flowcat_data.json"
@@ -41,7 +42,7 @@ class Goal(Static):
         progress_bar = ProgressBar(total=self.goal_data['levels'], show_eta=False)
         progress_bar.progress = self.goal_data['progress']
         yield progress_bar
-        yield Label(f"周期/关卡：{self.goal_data.get('pomodoros_per_level', 1)}（当前已完成 {self.goal_data.get('current_pomodoros', 0)}）")
+        yield Label(f"番茄周期：{self.goal_data.get('pomodoros_per_level', 1)}（当前已完成 {self.goal_data.get('current_pomodoros', 0)}）")
         yield Horizontal(
             Button("完成关卡", id=f"complete-{self.index}", variant="success"),
             Button("编辑", id=f"edit-{self.index}", variant="primary"),
@@ -185,6 +186,44 @@ class Pomodoro(Static):
         if goal_labels:
             goal_labels.first().update(f"当前目标: {new_name}")
 
+
+class RandomNumberScreen(ModalScreen):
+    """随机数生成界面"""
+    BINDINGS = [
+        ("escape", "app.pop_screen", "关闭"),
+    ]
+
+    def __init__(self, on_done):
+        super().__init__()
+        self.on_done = on_done
+
+    def compose(self) -> ComposeResult:
+        yield Label("请输入随机数范围", classes="screen-title")
+        yield Label("最小值:")
+        yield Input(placeholder="0", id="min")
+        yield Label("最大值:")
+        yield Input(placeholder="100", id="max")
+        yield Horizontal(
+            Button("生成随机数", id="generate", variant="success"),
+            Button("取消", id="cancel", variant="error"),
+            classes="screen-actions"
+        )
+
+    def on_button_pressed(self, event: Button.Pressed):
+        if event.button.id == "generate":
+            try:
+                min_val = int(self.query_one("#min", Input).value or 0)
+                max_val = int(self.query_one("#max", Input).value or 100)
+                if min_val > max_val:
+                    self.notify("最小值不能大于最大值！", severity="error")
+                    return
+                self.on_done(min_val, max_val)
+                self.app.pop_screen()
+            except ValueError as e:
+                self.notify(f"输入错误: {str(e)}", severity="error")
+        elif event.button.id == "cancel":
+            self.app.pop_screen()
+
 class FlowCatApp(App):
     CSS_PATH = "flowcat.css"
     TITLE = "🐱 FlowCat"
@@ -219,6 +258,7 @@ class FlowCatApp(App):
             id="main-row"
         )
         yield Footer()
+        yield Label("快捷键: [b]D[/b] - 随机选择今日目标 | [b]F[/b] - 生成随机数", classes="key-bindings")
 
     def refresh_goals(self):
         """刷新所有目标列表"""
@@ -290,7 +330,32 @@ class FlowCatApp(App):
         self.refresh_goals()
         self.notify(f"成功添加目标: {goal['name']}", title="目标管理")
 
+    def on_key(self, event) -> None:
+        """处理按键事件"""
+        if event.key.lower() == "d":
+            self.random_select_today_goal()
+        elif event.key.lower() == "f":
+            self.open_random_number_screen()
 
+    def random_select_today_goal(self):
+        """随机选择一个今日目标"""
+        today_goals = self.get_goals(today_only=True)
+        if not today_goals:
+            self.notify("没有今日目标！", severity="warning")
+            return
+        selected_goal = random.choice(today_goals)
+        self.active_goal_index = selected_goal.index
+        self.notify(f"随机选中今日目标: {selected_goal.goal_data['name']}", title="随机选择")
+        self.refresh_goals()
+
+    def open_random_number_screen(self):
+        """打开随机数生成界面"""
+        self.push_screen(RandomNumberScreen(self.generate_random_number))
+
+    def generate_random_number(self, min_val: int, max_val: int):
+        """生成随机数并通知用户"""
+        random_num = random.randint(min_val, max_val)
+        self.notify(f"随机数: {random_num} (范围: {min_val} - {max_val})", title="随机数生成")
 
 class NewGoalScreen(Screen):
     def __init__(self, on_done):
